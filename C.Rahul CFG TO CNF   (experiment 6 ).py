@@ -1,3 +1,6 @@
+# 
+
+
 import string
 
 def remove_char(string,pos):

@@ -22,19 +22,19 @@ for i in input_string:
   for b in trans:
     if b[2] == "^":
       stack.pop()
-    print(" | ".join(n for n in b))  
-    state = b[3]
-    break
+      print(" | ".join(n for n in b))  
+      state = b[3]
+      break
   if len(stack) == 0 and b[0] == '^':
-    state = b[3]
-    break
+      state = b[3]
+      break
   if i == b[0]:
-    stack.append(b[1])
-    print(" | ".join(n for n in b))
-    state = b[3]
-    break
+      stack.append(b[1])
+      print(" | ".join(n for n in b))
+      state = b[3]
+      break
   if len(stack) == 0 or b[1] != stack[len(stack)-1]:
-    continue
+      continue
 
 print("state is "+state)
 if state == final_state or len(stack) == 0:

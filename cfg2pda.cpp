@@ -5,9 +5,9 @@ int main() {
     int n;
     cout << "Enter the number of Production Rules of CFG: ";
     cin >> n;
-    char s1;
+    string s1;
     string s2;
-    vector<pair<char, string>> v;
+    vector<pair<string, string>> v;
 
     cout << "Please enter the Production rules of CFG:\n";
 
@@ -16,28 +16,37 @@ int main() {
         v.push_back(make_pair(s1, s2));
     }
 
-    set<char> terminalSymbols;
-    set<char> nonTerminalSymbols; // Corrected declaration
+    set<string> terminalSymbols;
+    set<string> nonTerminalSymbols;
 
     for (int i = 0; i < n; i++) {
-        char nonTerminal = v[i].first;
+        string nonTerminal = v[i].first;
         nonTerminalSymbols.insert(nonTerminal); // Populate nonTerminalSymbols
         string production = v[i].second;
-        for (char ch : production) {
-            if (isalpha(ch) && islower(ch)) {
-                terminalSymbols.insert(ch);
+
+        // Split the production string by '|' to handle multiple production rules
+        istringstream productionStream(production);
+        string rule;
+        while (getline(productionStream, rule, '|')) {
+            for (char ch : rule) {
+                if (isalpha(ch) && isupper(ch)) {
+                    nonTerminalSymbols.insert(string(1, ch));
+                } else if (isalnum(ch)) {
+                    terminalSymbols.insert(string(1, ch));
+                }
             }
-            if (ch == '#') {
-                terminalSymbols.insert('#'); // Use '#' to represent epsilon
-            }
+        }
+
+        if (production == "#") {
+            terminalSymbols.insert("#"); // Use '#' to represent epsilon
         }
     }
 
-    cout << "The Corresponding Production Rules For PDA are:-" << endl;
+    cout << "The Corresponding Production Rules For PDA are:" << endl;
 
-    cout << "Rules For Non-Terminal Symbols are:-\n";
+    cout << "Rules For Non-Terminal Symbols are:" << endl;
 
-    for (const char &nonTerminal : nonTerminalSymbols) {
+    for (const string &nonTerminal : nonTerminalSymbols) {
         int flag = 0;
         cout << "dl(q,null," << nonTerminal << ") --> ";
 
@@ -56,9 +65,9 @@ int main() {
         }
     }
 
-    
-    for (const char &terminal : terminalSymbols) {
-        if (terminal == '#') {
+    cout << "Rules For Terminal Symbols are:" << endl;
+    for (const string &terminal : terminalSymbols) {
+        if (terminal == "#") {
             cout << "dl(q,null,null) --> dl(q,null)" << endl; // Handle epsilon production
         } else {
             cout << "dl(q," << terminal << "," << terminal << ") --> dl(q,null)" << endl;

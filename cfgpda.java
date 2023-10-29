@@ -1,97 +1,120 @@
+import java.io.*;
 import java.util.*;
 
-public class CFGtoPDAConversion {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+class Main {
 
-        System.out.print("Enter the number of Production Rules of CFG: ");
-        int n = scanner.nextInt();
-        scanner.nextLine(); // Consume the newline
+  public static void main(String[] args) throws IOException {
 
-        String s1, s2;
-        List<Pair<String, String>> v = new ArrayList<>();
+    // Take production rules input
+    Scanner sc = new Scanner(System.in);
 
-        System.out.println("Please enter the Production rules of CFG:");
-        for (int i = 0; i < n; i++) {
-            s1 = scanner.next();
-            s2 = scanner.next();
-            v.add(new Pair<>(s1, s2));
-        }
+    System.out.print("Enter number of production rules: ");
+    int n = sc.nextInt();
 
-        Set<String> terminalSymbols = new HashSet<>();
-        Set<String> nonTerminalSymbols = new HashSet<>();
+    Vector<Pair> rules = new Vector<>();
+    System.out.println("Enter production rules:");
 
-        for (int i = 0; i < n; i++) {
-            String nonTerminal = v.get(i).getKey();
-            nonTerminalSymbols.add(nonTerminal); // Populate nonTerminalSymbols
-            String production = v.get(i).getValue();
-
-            // Split the production string by '|' to handle multiple production rules
-            Scanner productionScanner = new Scanner(production);
-            productionScanner.useDelimiter("\\|");
-            while (productionScanner.hasNext()) {
-                String rule = productionScanner.next();
-                for (char ch : rule.toCharArray()) {
-                    if (Character.isLetter(ch) && Character.isUpperCase(ch)) {
-                        nonTerminalSymbols.add(String.valueOf(ch));
-                    } else if (Character.isLetterOrDigit(ch)) {
-                        terminalSymbols.add(String.valueOf(ch));
-                    }
-                }
-            }
-
-            if (production.equals("#")) {
-                terminalSymbols.add("#"); // Use '#' to represent epsilon
-            }
-        }
-
-        System.out.println("The Corresponding Production Rules For PDA are:");
-        System.out.println("Rules For Non-Terminal Symbols are:");
-
-        for (String nonTerminal : nonTerminalSymbols) {
-            int flag = 0;
-            System.out.print("dl(q,null," + nonTerminal + ") --> ");
-
-            for (int i = 0; i < n; i++) {
-                if (v.get(i).getKey().equals(nonTerminal)) {
-                    if (flag == 1) {
-                        System.out.print(" | ");
-                    }
-                    System.out.print("dl(q," + v.get(i).getValue() + ")");
-                    flag = 1;
-                }
-            }
-
-            if (flag != 0) {
-                System.out.println();
-            }
-        }
-
-        System.out.println("Rules For Terminal Symbols are:");
-        for (String terminal : terminalSymbols) {
-            if (terminal.equals("#")) {
-                System.out.println("dl(q,null,null) --> dl(q,null)"); // Handle epsilon production
-            } else {
-                System.out.println("dl(q," + terminal + "," + terminal + ") --> dl(q,null)");
-            }
-        }
+    for(int i=0; i<n; i++) {
+      String left = sc.next();
+      String right = sc.next();
+      rules.add(new Pair(left, right)); 
     }
 
-    static class Pair<K, V> {
-        private K key;
-        private V value;
+    // Extract symbols
+    Set<String> nonTerminals = new HashSet<>();
+    Set<String> terminals = new HashSet<>();
 
-        public Pair(K key, V value) {
-            this.key = key;
-            this.value = value;
-        }
+    for(Pair rule: rules) {
+      
+      String production = rule.right;
 
-        public K getKey() {
-            return key;
+      if(production.contains("|")) {
+        StringTokenizer st = new StringTokenizer(production, "|");
+        while(st.hasMoreTokens()) {
+          String prod = st.nextToken();
+          getSymbols(prod, nonTerminals, terminals);
         }
+      }
+      else {
+        getSymbols(production, nonTerminals, terminals);
+      }
 
-        public V getValue() {
-            return value;
-        }
+      if(production.equals("#")) {
+        terminals.add("#");
+      }
+
     }
+
+    // Print PDA rules
+    System.out.println("PDA Production Rules:");
+
+    for(String nonTerm: nonTerminals) {
+
+      System.out.print("dl(q,null," + nonTerm + ") --> ");
+      
+      boolean first = true;
+
+      for(Pair rule: rules) {
+
+        if(rule.left.equals(nonTerm)) {
+
+          String production = rule.right;
+
+          if(production.contains("|")) {
+            StringTokenizer st = new StringTokenizer(production, "|");
+            while(st.hasMoreTokens()) {
+              if(!first) {
+                System.out.print(" | ");
+              }
+              System.out.print("dl(q," + st.nextToken() + ")");
+              first = false;
+            }
+          }
+          else {
+            if(!first) {
+              System.out.print(" | ");
+            }
+            System.out.print("dl(q," + production + ")");
+            first = false;
+          }
+
+        }
+
+      }
+
+      System.out.println();
+
+    }
+
+    // Print terminal rules
+    for(String term: terminals) {
+      if(term.equals("#")) {
+        System.out.println("dl(q,null,null) --> dl(q,null)");
+      } else {
+        System.out.println("dl(q," + term + "," + term + ") --> dl(q,null)");
+      }
+    }
+
+  }
+
+  static void getSymbols(String production, Set<String> nonTerminals, Set<String> terminals) {
+    for(char ch: production.toCharArray()) {
+      if(Character.isUpperCase(ch)) {
+        nonTerminals.add(String.valueOf(ch));
+      } else if(Character.isLetterOrDigit(ch)) {
+        terminals.add(String.valueOf(ch));  
+      }
+    }
+  }
+
+}
+
+class Pair {
+  String left;
+  String right;
+
+  public Pair(String left, String right) {
+    this.left = left;
+    this.right = right;
+  }
 }

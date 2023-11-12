@@ -27,3 +27,45 @@ for term in terminals:
         print("dl(q,null,null) --> dl(q,null)")
     else:
         print(f"dl(q,{term},{term}) --> dl(q,null)")
+'''
+
+
+Algorithm:
+Step 1: Input Production Rules
+
+Take the number of production rules as input (num_rules).
+Read production rules into a list (rules).
+
+Step 2: Identify Non-terminals and Terminals
+
+Create a set of non-terminals (non_terminals) from the left side of each production rule.
+Create a set of terminals (terminals) from the right side of each production rule.
+
+Step 3: Print PDA Production Rules
+
+For each non-terminal in non_terminals:
+
+Print the PDA production rule for that non-terminal.
+
+
+For each terminal in terminals:
+
+Print the PDA production rule for that terminal.
+
+
+
+PDA Production Rule Printing:
+
+For each non-terminal:
+
+Print the PDA transition rule in the form dl(q,null,non_term) --> dl(q,prod1 | prod2 | ...).
+
+
+For each terminal:
+
+Print the PDA transition rule in the form dl(q,term,term) --> dl(q,null).
+
+
+
+'''
+

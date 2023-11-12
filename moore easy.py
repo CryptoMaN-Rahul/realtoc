@@ -86,3 +86,67 @@ if __name__ == "__main__":
     main()
 
 
+'''
+
+Create a MooreMachine instance with empty sets for states, inputs, and empty dictionaries for outputs and transitions.
+
+Add States, Inputs, and Outputs:
+2. Take user input for the number of states (num_states).
+3. For each state:
+
+Take user input for the state name (state).
+Add the state to the Moore Machine using add_state.
+
+
+
+Take user input for the number of input symbols (num_inputs).
+
+
+For each input symbol:
+
+Take user input for the input symbol (input_symbol).
+Add the input symbol to the Moore Machine using add_input.
+
+
+
+For each state in the Moore Machine:
+
+Take user input for the output symbol for that state (output_symbol).
+Add the output symbol to the Moore Machine using add_output.
+
+
+
+Add Transitions:
+7. For each state in the Moore Machine:
+
+Take user input for the current state (current_state).
+Take user input for the number of transitions for that state (num_transitions).
+For each transition:
+
+Take user input for the input symbol for this transition (input_symbol).
+Take user input for the next state (next_state).
+Add the transition using add_transition.
+
+
+
+Set Initial State:
+8. Take user input for the initial state (initial_state).
+9. Set the initial state using set_initial_state.
+Process Input String:
+10. Take user input for the input string (input_string).
+11. Initialize an empty string for output_sequence with the initial state's output.
+Main Loop:
+12. For each symbol in the input string:
+
+Perform the transition using transition and update the current state.
+Accumulate the output in the output_sequence.
+
+Print Output:
+13. For each step in the input string processing:
+
+Print the input symbol, current state, and output.
+
+
+Print the final output_sequence.
+
+'''

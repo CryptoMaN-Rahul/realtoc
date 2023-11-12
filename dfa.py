@@ -85,3 +85,48 @@ class DFA:
 
 if __name__ == "__main__":
     DFAValidateString.main()
+
+
+
+
+''' Algorithm Overview: DFA String Validation
+
+Initialization:
+
+Get the set of valid input symbols (∑).
+Get the set of states (Q).
+Get the starting state (q0).
+Get the set of final states (F).
+Initialize an empty dictionary for transitions.
+
+
+Transition Table Construction:
+For each state in Q:
+For each valid input symbol in ∑:
+Get the next state for the given input symbol.
+Populate the transition table.
+
+
+DFA Object Initialization:
+Create a DFA object with the starting state, final states, and transitions.
+
+
+String Validation:
+For each character in the input string:
+Check if there is a transition for the current state and the input symbol.
+If yes, update the current state.
+If no, show an error indicating an invalid input symbol.
+
+Result Analysis:
+After processing the entire string:
+
+If the final state is in the set of final states, the string is valid.
+If not, show an error indicating an invalid final state.
+
+
+Traversal Path Recording:
+Record the traversal path, showing each transition from state to state.
+'''
+
+
+

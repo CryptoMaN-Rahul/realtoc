@@ -35,19 +35,18 @@ class DFAValidateString:
         transitions = {}
 
         for state in states:
-            transition = {}
+            transitions[state] = {}
             for valid_input in valid_inputs:
                 message = f"Enter transition (δ) for state '{state}' having input '{valid_input}': "
                 next_state = Utility.get_input(message)
-                transition[valid_input] = next_state
-            transitions[state] = transition
+                transitions[state][valid_input] = next_state
 
         dfa = DFA(starting_state, final_states, transitions)
 
         while True:
             message = "Enter string to be validated: "
-            validate_string = Utility.get_input(message)
-            dfa.validate_string(validate_string)
+            input_sequence = Utility.get_input(message)
+            dfa.process_input_sequence(input_sequence)
 
             choice = input("Do you want to validate another string? (y/n): ")
             if choice.lower() == "n":
@@ -60,19 +59,19 @@ class DFA:
         self.final_states = final_states
         self.transitions = transitions
 
-    def validate_string(self, validate_string):
+    def process_input_sequence(self, input_sequence):
         current_state = self.starting_state
         traversal_path = [current_state]
 
-        for c in validate_string:
+        for input_symbol in input_sequence:
             current_state_transition = self.transitions.get(current_state, {})
-            next_state = current_state_transition.get(c)
+            next_state = current_state_transition.get(input_symbol)
 
             if next_state is None:
                 Utility.show_error(f"Your string contains value '{c}' which is not present in the input set")
                 return
 
-            traversal_path.append(f"{c} -> {next_state}")
+            traversal_path.append(f"{input_symbol} -> {next_state}")
             current_state = next_state
 
         if current_state in self.final_states:

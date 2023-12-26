@@ -17,7 +17,7 @@ class Utility:
 class DFAValidateString:
     @staticmethod
     def main():
-        message = "Enter valid input states (∑) (comma-separated): "
+        message = "Enter valid input symbols (∑) (comma-separated): "
         valid_input_string = Utility.get_input(message)
         valid_inputs = set(valid_input_string.split(","))
 
@@ -65,14 +65,16 @@ class DFA:
 
         for input_symbol in input_sequence:
             current_state_transition = self.transitions.get(current_state, {})
-            next_state = current_state_transition.get(input_symbol)
+            if input_symbol in current_state_transition:
 
-            if next_state is None:
-                Utility.show_error(f"Your string contains value '{c}' which is not present in the input set")
+              next_state = current_state_transition.get(input_symbol)
+
+              traversal_path.append(f"{input_symbol} -> {next_state}")
+              current_state = next_state
+              
+            else:
+                Utility.show_error(f"Invalid transition: State '{current_state}' with input '{input_symbol}'")
                 return
-
-            traversal_path.append(f"{input_symbol} -> {next_state}")
-            current_state = next_state
 
         if current_state in self.final_states:
             print("Output: Your string is valid")
